@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #e3e6e4;
+    }
+
+    h1 {
+        text-align: center;
+        color: #1313d6;
+    }
+
+    #signup-form {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 15px;
+    }
+
+    #signup-form form {
+        box-shadow: 0px 2px 5px;
+        border-radius: 5px;
+        padding: 20px;
+        background-color: #fff;
+
+    }
+
+    p {
+        font-size: 25px;
+        font-weight: bold;
+        color: black;
+        background-color: rgb(255 0 0 / 0.2);
+        border-left: 5px solid red;
+        padding: 15px;
+    }
+
+    #signup-form input {
+        background-color: gainsboro;
+        width: 20em;
+        height: 1.875em; 
+        margin-top: 15px;
+        font-size: 25px;
+        padding: 20px;
+        outline: 0;
+        border: 0;
+        border-left: 5px solid #0f2845; 
+
+    }
+
+    #signup-form form span {
+        float: right;
+        font-size: larger;
+        margin: 15px;
+    }
+
+    #signup-form input[type='submit'] {
+        background-color: rgb(19, 19, 214);
+        color: whitesmoke;
+        width: 100%;
+        height: 50px;
+        font-size: 25px;
+        padding: 0;
+        border: 0;
+
+    }
+</style>
+
+<div id="signup-form">
+    <img src="{% static 'images/login.png' %}" alt="login" width="45%">
+
+    <form method="POST" action="{% url 'signup' %}">
+        <h1>
+            Create an account
+        </h1>
+        {% csrf_token %}
+        {% if error %}
+        <p>
+            <strong>{{ error |capfirst }}</strong>
+        </p>
+        {% endif %}
+        <input type="text" name="username" placeholder="Username" required /><br />
+        <br />
+        <input type="password" name="password1" placeholder="Password" required /><br />
+        <br />
+        <input type="password" name="password2" placeholder="Confirm Password" required /><br />
+        <br />
+        <span>Already have an account ?<a href="{% url 'login' %}" style="color:blue;text-decoration:underline;"> Log
+                in</a> </span>
+        <input type="submit" value="signup" />
+    </form>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+{% endblock %}

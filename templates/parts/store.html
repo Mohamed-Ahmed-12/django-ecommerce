@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .container {
+        background-image: url("/static/images/mer.png");
+        background-repeat: no-repeat;
+        background-size: 500px 240px;
+        background-position-x: 900px;
+        background-position-y: 50px;
+        height: 19em;
+
+    }
+</style>
+<hr style="background-color: gray;">
+
+<div class="container">
+    <article>
+        <h2>
+            <span style="color:#febc68; font-size: larger;">Star Store</span> <br>
+            Online Store For New & Original <br>
+            Mercedes Accessories In Egypt
+        </h2>
+        <h4>Trendy Products, Factory Prices, Excellent Service</h4>
+    </article>
+</div>
+
+<div class="main">
+    <div class="header-section">
+        <hr>
+        <h2>Categories</h2>
+        <hr>
+    </div>
+
+    <div id="category">
+        <span data-aos="zoom-in"> <img src="{% static 'images/brake_disks.jpg' %}">
+            <p>Brake Discs</p>
+        </span>
+        <span data-aos="zoom-in"> <img src="{% static 'images/wheels.jpg' %}">
+            <p>Wheels</p>
+        </span>
+        <span data-aos="zoom-in"> <img src="{% static 'images/liquid.jpg' %}">
+            <p>Liquid Polish</p>
+        </span>
+        <span data-aos="zoom-in"> <img src="{% static 'images/service_kits.jpg' %}">
+            <p>Service Kits</p>
+        </span>
+        <span data-aos="zoom-in"> <img src="{% static 'images/engine_parts.jpg' %}">
+            <p>Engine Parts</p>
+        </span>
+        <span data-aos="zoom-in"> <img src="{% static 'images/pattery.jpg' %}">
+            <p>Patteries</p>
+        </span>
+        <span data-aos="zoom-in"> <img src="{% static 'images/control.jpg' %}">
+            <p>Steering wheel</p>
+        </span>
+    </div>
+
+    <div class="header-section">
+        <hr>
+        <h2>Our Products</h2>
+        <hr>
+    </div>
+    <div id="product">
+        {% for product in all_products %}
+        <div data-aos="zoom-in">
+            <img src="{{ product.image.url }}" width="248px" height="150px" style="border-bottom: 1px solid lightgray;">
+            <p class="desc">{{ product.name }}</p>
+            <p class="price">{{ product.price }} L.E</p>
+            <span>
+                <button onclick="this.style='background-color:green'" class="add" data-id="{{ product.id }}">Add to
+                    Cart</button>
+                <input type="number" name="quantity{{ product.id }}" max="10" min="1" autocomplete="off">
+            </span>
+        </div>
+        {% endfor %}
+        <span id="request-order">
+            <button><a href="#">Order Special Product</a></button>
+        </span>
+    </div>
+    <div class="header-section">
+        <hr>
+        <h2>Why US</h2>
+        <hr>
+    </div>
+    
+    <div class="why">
+        <div data-aos="fade-right">
+            <i class="fa fa-money fa-3x"></i>
+            <p>Best Price</p>
+        </div>
+        <div data-aos="fade-down">
+            <i class="fa fa-star fa-3x"></i>
+            <p>Best Quality</p>
+        </div>
+        <div data-aos="fade-left">
+            <i class="fa fa-truck fa-3x"></i>
+            <p>Fast Shipping</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    AOS.init();
+</script>
+
+
+{% endblock %}

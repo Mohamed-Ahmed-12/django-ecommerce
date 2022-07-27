@@ -1,0 +1,28 @@
+{% load static %}
+{% block content %}
+<header>
+    <div class="logo">
+        <a href="{% url 'store' %}"><img src="{% static 'images/logoo.jpg' %}" width="60px" height="60px" style="border-radius: 50%;"></a>
+    </div>
+    <nav>
+        {% if request.user.is_authenticated %}
+        <form action="{% url 'search' %}" method="post">{% csrf_token %}
+            <input type="search" name="search" id="search" placeholder="Search About Products...">
+            <button id="btn-search" type="submit"><i class="fa fa-search"></i></button>
+        </form>
+        {% endif %}
+
+    </nav>
+    <div class="header-button">
+        <a href='mailto:ma533869@gmail'><button><i class="fa fa-envelope "></i>Contact US</button></a>
+        {% if not request.user.is_authenticated %}
+        <a href="{% url 'login' %}"><button><i class="fa fa-user"></i>Sign in</button></a>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'cart' %}"><button><span style="color: #ffffff ;font-weight:bold;"> {{ request.session.count }}</span> <i class="fa fa-shopping-cart fa-lg "></i>My Cart</button></a>
+        <a href="{% url 'logout' %}"><button><i class="fa fa-sign-out"></i>Log out</button></a>
+        {% endif %}
+
+    </div>
+</header>
+{% endblock %}

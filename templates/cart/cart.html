@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'base.html' %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart | Star Store </title>
+</head>
+{% block content %}
+<style>
+    body {
+        background-color: #eee;
+    }
+
+    h3 {
+        color: #0f2845;
+    }
+
+    .cont-cart {
+        display: grid;
+        grid-template-columns: auto 70% 20% auto;
+        grid-column-gap: 20px;
+
+    }
+
+    .center {
+        border-radius: 10px;
+        padding: 5px;
+        grid-column-start: 2;
+        background-color: #f8f8f8;
+        box-shadow: 0px 1px 2px;
+    }
+
+    .right {
+        border-radius: 10px;
+        grid-column-start: 3;
+        padding: 5px;
+        background-color: #f8f8f8;
+        height: 260px;
+        box-shadow: 0px 1px 2px;
+    }
+
+    .right span {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px;
+    }
+
+    #btn-checkout,
+    #back {
+        width: 100%;
+        border: 0;
+        height: 28px;
+        border-radius: 3px;
+    }
+
+    #back {
+        margin-top: 10px;
+        background-color: #eee;
+        border: 1px solid lightgrey;
+    }
+
+    #back:hover {
+        border: 1px solid black;
+        cursor: pointer;
+    }
+
+    #btn-checkout {
+        background-color: green;
+        color: #ffff;
+    }
+
+    #btn-checkout:hover {
+        opacity: .5;
+    }
+
+    .center ul {
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0;
+    }
+
+    .center ul li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin: 10px;
+    }
+
+    .center ul li:first-child {
+        color: #0f2845;
+    }
+
+    .center ul li div {
+        text-align: center;
+        width: 170px;
+
+    }
+
+    .center ul li img:first-child {
+        border: 1px solid lightgray;
+        border-radius: 5px;
+    }
+
+    .center ul li span {
+        padding-left: 10px;
+    }
+
+    .center ul li input {
+        text-align: center;
+        width: 70px;
+        height: 22px;
+    }
+
+    .btn-remove {
+        background-color: #dc3545;
+        border: 0;
+        border-radius: 5px;
+        color: whitesmoke;
+        padding: 10px;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+    .btn-remove:hover {
+        opacity: .8;
+    }
+
+    #discount {
+        color: red;
+    }
+
+    #tax {
+        color: #0f2845;
+    }
+
+    #total {
+        font-weight: bolder;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    h1 {
+        text-align: center;
+        color: #3b49df;
+    }
+
+    .modal {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(1.1);
+        transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+    }
+
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -85%);
+        background-color: white;
+        padding: 1rem 1.5rem;
+        width: 40.5rem;
+        border-radius: 0.5rem;
+        height: 20.5rem;
+    }
+
+    .modal-content form input {
+        margin: 5px;
+        padding: 5px;
+    }
+
+    .modal-content form input[type=submit] {
+        background-color: #3b49df;
+        color: whitesmoke;
+        cursor: pointer;
+        width: 96.5%;
+        border: 0;
+    }
+
+    .close-button {
+        float: right;
+        width: 1.5rem;
+        line-height: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 0.25rem;
+        background-color: lightgray;
+    }
+
+    .close-button:hover {
+        background-color: darkgray;
+    }
+
+    .show-modal {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1.0);
+        transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+    }
+</style>
+<br><br>
+<div class="cont-cart">
+    <div class="center">
+        <h3>Cart Items: {{ request.session.count }}</h3>
+        <hr>
+        <ul>
+            <li>
+                <div>
+                    <h3>Products</h3>
+                </div>
+                <div>
+                    <h3>Price</h3>
+                </div>
+                <div>
+                    <h3>Quantity</h3>
+                </div>
+                <div>
+                    <h3>Total Price</h3>
+                </div>
+                <div>
+                    <h3>Remove</h3>
+                </div>
+            </li>
+            <hr width="100%">
+            {% for item in products %}
+            <li id="pro{{ item.id }}">
+                <div style="display: flex; align-items: center;">
+                    <img src="{{ item.product.image.url }}" width="50px" height="50px">
+                    <span>{{ item.product.name }}</span>
+                </div>
+                <div>
+                    <span style="font-weight: bold;">{{item.product.price}} L.E</span>
+                </div>
+                <div>
+                    <input type="number" name="quantity" id="qty" max="10" min="1" value="{{ item.quantity }}"
+                        readonly="">
+                </div>
+                <div>
+                    <span class="total-price-per-product" style="font-weight: bold;">{% widthratio item.product.price 1 item.quantity %}</span>
+                </div>
+                <div>
+                    <button class="btn-remove" data-id="{{ item.id }}">Remove<i class="fa fa-remove"></i></button>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="right">
+        <span>
+            <label>Total Price:</label>
+            <span id="total-price"></span>
+        </span>
+        <span>
+            <label>Discount:</label>
+            <span id="discount"></span>
+        </span>
+        <span>
+            <label>Delivery Fee: </label>
+            <span id="tax"></span>
+        </span>
+        <br>
+        <hr style="width: 80%;">
+        <span>
+            <label>Total: </label>
+            <span id="total"></span>
+        </span>
+        <br>
+        <a>
+            <button id="btn-checkout" class="trigger">
+                <i class="fa fa-check"></i>Checkout
+            </button>
+        </a>
+
+        <a href="{% url 'store' %}">
+            <button id="back">← Back To Shopping</button>
+        </a>
+    </div>
+
+</div>
+
+<div class="modal">
+    <div class="modal-content">
+        <span class="close-button">×</span>
+        <h1>Checkout</h1>
+        <form method="post" id="shipping-form">
+            {% csrf_token %}
+            <h2>Shipping Information</h2>
+            <hr>
+            <input type="text" name="name" placeholder="Name">
+            <input type="tel" name="phone" placeholder="Phone Number">
+            <input type="text" name="street" placeholder="Street">
+            <input type="text" name="city" placeholder="City">
+            <input type="text" name="state" placeholder="State">
+            <input type="text" name="country" placeholder="Country" value="Egypt" disabled>
+            <input type="submit" value="Save">
+        </form>
+    </div>
+</div>
+<br>
+<br>
+
+<script>
+    const modal = document.querySelector(".modal");
+    const trigger = document.querySelector(".trigger");
+    const closeButton = document.querySelector(".close-button");
+
+    function toggleModal() {
+        modal.classList.toggle("show-modal");
+    }
+
+    function windowOnClick(event) {
+        if (event.target === modal) {
+            toggleModal();
+        }
+    }
+
+    trigger.addEventListener("click", toggleModal);
+    closeButton.addEventListener("click", toggleModal);
+    window.addEventListener("click", windowOnClick);
+    
+    let btn = document.getElementsByTagName('input');
+    for(let i=0;i<btn.length;i++){
+        btn[i].addEventListener('input',function(e){
+            e.target.style="border:0 ; outline:0; ;border-bottom: 2px solid green";
+        })
+    }    
+</script>
+{% endblock %}
